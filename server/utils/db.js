@@ -1,22 +1,35 @@
 import Database from 'sqlite-async';
 
-let client = null;
+let masterClient = null;
+let auditClient = null;
 
-export const openDB = async (path) => {
-    if (client) {
-        await client.close();
+export const openMasterDB = async (path) => {
+    if (masterClient) {
+        return masterClient;
     }
 
-    client = await Database.open(path);
-    return client;
+    masterClient = await Database.open(path);
+    return masterClient;
 };
 
-export const getClient = () => client;
-
-export const close = async () => {
-    if (client) {
-        return client.close();
+export const openAuditDB = async (path) => {
+    if (auditClient) {
+        return auditClient;
     }
 
-    return null;
+    auditClient = await Database.open(path);
+    return auditClient;
+};
+
+export const getMasterDB = () => masterClient;
+export const getAuditDB = () => auditClient;
+
+export const close = async () => {
+    if (masterClient) {
+        await masterClient.close();
+    }
+
+    if (auditClient) {
+        await auditClient.close();
+    }
 };

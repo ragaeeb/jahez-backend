@@ -1,5 +1,5 @@
 import express from 'express';
-import { doList } from '../controllers/shops.js';
+import { doList, validateCoordinates } from '../controllers/shops.js';
 import { validateQuery } from '../middleware/validation.js';
 
 import { asyncHandler } from '../middleware/errorHandler.js';
@@ -28,6 +28,6 @@ const LookupSchema = {
 
 const router = express.Router();
 
-router.get('/', validateQuery(LookupSchema), asyncHandler(doList));
+router.get('/', validateQuery(LookupSchema), asyncHandler(validateCoordinates), asyncHandler(doList));
 
 export default router;

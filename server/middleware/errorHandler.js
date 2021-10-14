@@ -23,9 +23,7 @@ export const NotFound = (message) => createError(message, 404);
  */
 // eslint-disable-next-line unused-imports/no-unused-vars
 export const catchError = (err, req, res, next) => {
-    if (req.models) {
-        logger.error('req', req.models);
-    }
+    logger.error('request failure', req.requestId);
 
     logger.error(err.stack);
     res.status(err.status || 500).json({

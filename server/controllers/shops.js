@@ -1,12 +1,29 @@
 import { GeoPosition } from 'geo-position.ts';
 import { SimpleOpeningHours } from 'simple-opening-hours';
-import { getClient } from '../utils/db.js';
+import { InvalidParams } from '../middleware/errorHandler.js';
+import { logStep } from '../middleware/logging.js';
+import { getMasterDB } from '../utils/db.js';
+
+export const validateCoordinates = async (req, _, next) => {
+    logStep(req, 'controllers/shops::validateCoordinates');
+
+    const { user_coordinates: coordinates } = req.query;
+    const [userLatitude, userLongitude] = coordinates.split(',');
+    const latitude = parseFloat(userLatitude);
+    const longitude = parseFloat(userLongitude);
+
+    if (!GeoPosition.IsValidGpsCoordinate(latitude, longitude)) {
+        return next(InvalidParams('Geographical coordinates are not valid'));
+    }
+
+    req.userLocation = new GeoPosition(latitude, longitude);
+
+    return next();
+};
 
 export const doList = async (req, res) => {
-    const { search_term: searchTerm, user_coordinates: coordinates, category_id: categoryId } = req.query;
-
-    const [userLatitude, userLongitude] = coordinates.split(',');
-    const userLocation = new GeoPosition(parseFloat(userLatitude), parseFloat(userLongitude));
+    logStep(req, 'controllers/shops::doList');
+    const { search_term: searchTerm, category_id: categoryId } = req.query;
 
     const tables = ['shops s INNER JOIN products p ON p.shop=s.id INNER JOIN branches b ON b.shop=s.id'];
     const filters = ['(p.name LIKE ? OR s.name LIKE ?)'];
@@ -20,7 +37,7 @@ export const doList = async (req, res) => {
         values.push(categoryId, categoryId);
     }
 
-    const select = await getClient().prepare(
+    const select = await getMasterDB().prepare(
         `SELECT s.id,b.id AS branchId,p.id AS productId,s.name AS shopName,s.schedule,latitude,longitude,b.name AS branchName,p.name AS productName FROM ${tables.join(
             ' ',
         )} WHERE ${filters.join(' AND ')}`,
@@ -30,7 +47,7 @@ export const doList = async (req, res) => {
     const [resultSet] = await Promise.all([select.all(), select.finalize()]);
 
     const transformed = resultSet
-        .filter((g) => new GeoPosition(g.latitude, g.longitude).Distance(userLocation).toFixed(0) <= 5000)
+        .filter((g) => new GeoPosition(g.latitude, g.longitude).Distance(req.userLocation).toFixed(0) <= 5000)
         .map(({ schedule, ...rest }) => ({ isOpen: new SimpleOpeningHours(schedule).isOpenNow(), ...rest }))
         .reduce(
             (shops, { isOpen, id, branchId, latitude, longitude, shopName, branchName, productId, productName }) => {

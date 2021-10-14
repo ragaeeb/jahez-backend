@@ -6,7 +6,7 @@ import hpp from 'hpp';
 import morgan from 'morgan';
 import xss from 'xss-clean';
 import { catchError, routeNotFound } from './middleware/errorHandler.js';
-import { openDB } from './utils/db.js';
+import { openAuditDB, openMasterDB } from './utils/db.js';
 import { limit } from './utils/security.js';
 import { logger } from './utils/logger.js';
 import attachRoutes from './routes/index.js';
@@ -67,9 +67,9 @@ export const init = () => {
 
 export const connectToDB = async (app) => {
     try {
-        const { PORT, NODE_ENV, DB_PATH } = process.env;
+        const { PORT, NODE_ENV, AUDIT_DB_PATH, DB_PATH } = process.env;
 
-        await openDB(DB_PATH);
+        await Promise.all([openMasterDB(DB_PATH), openAuditDB(AUDIT_DB_PATH)]);
 
         logger.info('Connected to databases');
 

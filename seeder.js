@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 const init = async () => {
     dotenv.config();
 
-    const { DB_PATH } = process.env;
+    const { DB_PATH, AUDIT_DB_PATH } = process.env;
 
     fs.unlinkSync(DB_PATH);
     const client = await Database.open(DB_PATH);
@@ -97,6 +97,15 @@ const init = async () => {
     );
 
     console.log('Database created:', DB_PATH);
+
+    const auditClient = await Database.open(AUDIT_DB_PATH);
+    await Promise.all(
+        [
+            `CREATE TABLE logs (id INTEGER PRIMARY KEY, request TEXT NOT NULL, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)`,
+        ].map((s) => auditClient.exec(s)),
+    );
+
+    console.log('Audit Database created:', AUDIT_DB_PATH);
 };
 
 init();

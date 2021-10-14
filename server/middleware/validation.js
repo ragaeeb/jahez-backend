@@ -3,6 +3,7 @@ import addFormats from 'ajv-formats';
 import { InvalidParams } from './errorHandler.js';
 import { logger } from '../utils/logger.js';
 import { Types } from '../models/schemas.js';
+import { logStep } from './logging.js';
 
 // eslint-disable-next-line new-cap
 const ajv = Ajv.default ? new Ajv.default({ coerceTypes: false }) : new Ajv({ coerceTypes: false });
@@ -11,6 +12,8 @@ addFormats(ajv);
 export const validate =
     (schema, field = 'body') =>
     (req, _, next) => {
+        logStep(req, 'middleware/validation::validate');
+
         try {
             const validator = ajv.compile({ type: Types.Object, additionalProperties: false, ...schema });
             logger.verbose('schema', schema);
