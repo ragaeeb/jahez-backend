@@ -1,0 +1,55 @@
+[
+    {
+        "name": "McDonalds",
+        "branches": [
+            { "name": "Bank St.", "latitude": 45.3506, "longitude": -75.793 },
+            { "name": "Heron Rd.", "latitude": 44.3506, "longitude": -74.793 }
+        ],
+        "categories": ["Fast Food"],
+        "products": [
+            { "name": "Big Mac", "categories": ["Burgers"] },
+            { "name": "McChicken", "categories": ["Burgers"] },
+            { "name": "McFlurry", "categories": ["Ice Cream"] }
+        ],
+        "schedule": "Mo-Sa 06:00-22:00"
+    },
+    {
+        "name": "Burger King",
+        "branches": [
+            { "name": "Bank St.", "latitude": 45.3505, "longitude": -75.792 },
+            { "name": "Heron Rd.", "latitude": 44.3504, "longitude": -74.791 }
+        ],
+        "categories": ["Fast Food"],
+        "products": [
+            { "name": "Whopper", "categories": ["Burgers"] },
+            { "name": "Whopper Jr.", "categories": ["Burgers"] }
+        ],
+        "schedule": "Mo-Fr 08:00-18:00; Sa,Su 10:00-20:00"
+    },
+    {
+        "name": "Dairy Queen",
+        "branches": [
+            { "name": "Bank St.", "latitude": 45.2505, "longitude": -75.692 },
+            { "name": "Heron Rd.", "latitude": 44.2504, "longitude": -74.291 }
+        ],
+        "categories": ["Dessert"],
+        "products": [
+            { "name": "Frosty", "categories": ["Ice Cream"] },
+            { "name": "Blizzard", "categories": ["Ice Cream"] }
+        ],
+        "schedule": "Sa-Su 00:00-05:00, Fr-Sa 22:00-24:00"
+    },
+    {
+        "name": "Baskin Robins",
+        "branches": [
+            { "name": "Bank St.", "latitude": 41.2505, "longitude": -71.692 },
+            { "name": "Heron Rd.", "latitude": 41.2504, "longitude": -71.291 }
+        ],
+        "categories": ["Dessert"],
+        "products": [
+            { "name": "Frosty", "categories": ["Ice Cream"] },
+            { "name": "Blast", "categories": ["Ice Cream"] }
+        ],
+        "schedule": "Sa-Su 00:00-05:00, Fr-Sa 22:00-24:00"
+    }
+]
