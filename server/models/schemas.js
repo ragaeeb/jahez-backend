@@ -5,9 +5,4 @@ export const Types = {
     Text: 'string',
 };
 
-export const DecimalText = {
-    type: Types.Text,
-    pattern: '^[+-]?([0-9]*[.])?[0-9]+$',
-};
-
 export default Types;

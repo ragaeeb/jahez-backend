@@ -3,7 +3,7 @@ import { doList } from '../controllers/shops.js';
 import { validateQuery } from '../middleware/validation.js';
 
 import { asyncHandler } from '../middleware/errorHandler.js';
-import { DecimalText, Types } from '../models/schemas.js';
+import { Types } from '../models/schemas.js';
 
 const LookupSchema = {
     required: ['search_term', 'user_coordinates'],
@@ -20,12 +20,8 @@ const LookupSchema = {
             type: Types.Text,
         },
         user_coordinates: {
-            required: ['latitude', 'longitude'],
-            type: Types.Object,
-            properties: {
-                latitude: DecimalText,
-                longitude: DecimalText,
-            },
+            type: Types.Text,
+            pattern: '^[+-]?([0-9]*[.])?[0-9]+,[+-]?([0-9]*[.])?[0-9]+$',
         },
     },
 };
