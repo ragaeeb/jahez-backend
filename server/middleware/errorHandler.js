@@ -11,8 +11,8 @@ const createError = (message, status, details) => {
     return error;
 };
 
-export const InvalidParams = (message) => createError(message, 401);
-export const InternalError = (message) => createError(message);
+export const InvalidParams = (message) => createError(message, 400);
+export const InternalError = (message) => createError(message, 500);
 export const NotFound = (message) => createError(message, 404);
 
 /**

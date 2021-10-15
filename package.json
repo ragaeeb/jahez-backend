@@ -17,22 +17,14 @@
     "dependencies": {
         "ajv": "8.6.3",
         "ajv-formats": "2.1.1",
-        "axios": "0.23.0",
         "body-parser": "1.19.0",
-        "compression": "1.7.4",
-        "cors": "2.8.5",
         "dotenv": "10.0.0",
         "express": "4.17.1",
-        "express-rate-limit": "5.5.0",
         "geo-position.ts": "^1.4.1",
-        "helmet": "4.6.0",
-        "hpp": "0.2.3",
-        "metaphone": "2.0.0",
         "morgan": "1.10.0",
         "simple-opening-hours": "^0.1.1",
         "sqlite-async": "^1.1.2",
-        "winston": "3.3.3",
-        "xss-clean": "0.1.1"
+        "winston": "3.3.3"
     },
     "devDependencies": {
         "@babel/cli": "7.15.7",

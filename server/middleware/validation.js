@@ -31,4 +31,4 @@ export const validate =
         }
     };
 
-export const validateQuery = (schema) => validate(schema, 'query');
+export default validate;

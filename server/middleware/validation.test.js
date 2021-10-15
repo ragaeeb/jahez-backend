@@ -1,30 +1,39 @@
-/* eslint-disable jest/expect-expect */
-/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "validate*"] }] */
-
 import faker from 'faker';
-import { beforeEach, describe, expect, it, jest } from '@jest/globals';
+import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { validate } from './validation.js';
-import { ValidationTest } from '../../testingUtils.js';
+import { InvalidParams } from './errorHandler.js';
 
+jest.mock('./errorHandler.js');
 jest.mock('../utils/logger.js');
 
 describe('validation', () => {
-    let vt;
+    let req;
+    let next;
 
     beforeEach(() => {
-        vt = new ValidationTest();
+        req = {
+            query: {},
+        };
+
+        next = jest.fn();
     });
 
+    afterEach(jest.clearAllMocks);
+
     it('should validate entire request', () => {
-        vt.req = { name: faker.name.firstName() };
-        validate({ type: 'object', properties: { name: { type: 'string' } } }, null)(vt.req, null, vt.next);
-        vt.validateResult();
+        req = { name: faker.name.firstName() };
+        validate({ type: 'object', properties: { name: { type: 'string' } } }, null)(req, null, next);
+        expect(next).toHaveBeenCalledTimes(1);
+        expect(next).toHaveBeenCalledWith();
     });
 
     it('should reject if entire request is not properly formatted', () => {
-        vt.req = { name: faker.datatype.number() };
-        validate({ type: 'object', properties: { name: { type: 'string' } } }, null)(vt.req, null, vt.next);
-        vt.validateResult('must be string');
+        InvalidParams.mockImplementation((s) => s);
+
+        req = { name: faker.datatype.number() };
+        validate({ type: 'object', properties: { name: { type: 'string' } } }, null)(req, null, next);
+        expect(next).toHaveBeenCalledTimes(1);
+        expect(next).toHaveBeenCalledWith('must be string');
     });
 
     describe('error case', () => {

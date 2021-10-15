@@ -8,6 +8,7 @@ export const logStep = (req, id) => {
 
 export const signRequest = (req, _, next) => {
     req.requestId = crypto.randomBytes(6).toString('hex');
+    req.timestamp = new Date();
     logStep(req, 'signRequest');
 
     next();

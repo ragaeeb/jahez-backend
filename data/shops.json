@@ -21,6 +21,7 @@
         ],
         "categories": ["Fast Food"],
         "products": [
+            { "name": "Crispy Chicken", "categories": ["Burgers"] },
             { "name": "Whopper", "categories": ["Burgers"] },
             { "name": "Whopper Jr.", "categories": ["Burgers"] }
         ],
@@ -42,7 +43,7 @@
     {
         "name": "Baskin Robins",
         "branches": [
-            { "name": "Bank St.", "latitude": 41.2505, "longitude": -71.692 },
+            { "name": "Bank St.", "latitude": 45.2505, "longitude": -75.692 },
             { "name": "Heron Rd.", "latitude": 41.2504, "longitude": -71.291 }
         ],
         "categories": ["Dessert"],

@@ -2,6 +2,7 @@ import { GeoPosition } from 'geo-position.ts';
 import { SimpleOpeningHours } from 'simple-opening-hours';
 import { InvalidParams } from '../middleware/errorHandler.js';
 import { logStep } from '../middleware/logging.js';
+import { SEARCH_RADIUS } from '../utils/constants.js';
 import { getMasterDB } from '../utils/db.js';
 
 export const validateCoordinates = async (req, _, next) => {
@@ -47,8 +48,8 @@ export const doList = async (req, res) => {
     const [resultSet] = await Promise.all([select.all(), select.finalize()]);
 
     const transformed = resultSet
-        .filter((g) => new GeoPosition(g.latitude, g.longitude).Distance(req.userLocation).toFixed(0) <= 5000)
-        .map(({ schedule, ...rest }) => ({ isOpen: new SimpleOpeningHours(schedule).isOpenNow(), ...rest }))
+        .filter((g) => new GeoPosition(g.latitude, g.longitude).Distance(req.userLocation).toFixed(0) <= SEARCH_RADIUS)
+        .map(({ schedule, ...rest }) => ({ isOpen: new SimpleOpeningHours(schedule).isOpenOn(req.timestamp), ...rest }))
         .reduce(
             (shops, { isOpen, id, branchId, latitude, longitude, shopName, branchName, productId, productName }) => {
                 const shop = shops[id] || { id: id.toString(), name: shopName, branches: {}, products: [] };

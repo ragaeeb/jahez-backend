@@ -1,22 +1,20 @@
 import faker from 'faker';
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
-import { InternalError, InvalidParams, NotFound, Unauthorized, catchError, routeNotFound } from './errorHandler.js';
+import { InternalError, InvalidParams, NotFound, catchError, routeNotFound } from './errorHandler.js';
 
 jest.mock('../utils/logger.js');
 
 describe('errorHandler', () => {
     describe('common errors', () => {
-        Object.entries({ 400: InvalidParams, 404: NotFound, 500: InternalError, 401: Unauthorized }).forEach(
-            ([code, f]) => {
-                it(`should throw ${code}`, () => {
-                    const message = faker.lorem.sentence();
-                    const result = f(message);
-                    expect(result).toBeInstanceOf(Error);
-                    expect(result.status).toEqual(Number(code));
-                    expect(result.toString()).toEqual(`Error: ${message}`);
-                });
-            },
-        );
+        Object.entries({ 400: InvalidParams, 404: NotFound, 500: InternalError }).forEach(([code, f]) => {
+            it(`should throw ${code}`, () => {
+                const message = faker.lorem.sentence();
+                const result = f(message);
+                expect(result).toBeInstanceOf(Error);
+                expect(result.status).toEqual(Number(code));
+                expect(result.toString()).toEqual(`Error: ${message}`);
+            });
+        });
     });
 
     describe('routeNotFound', () => {
