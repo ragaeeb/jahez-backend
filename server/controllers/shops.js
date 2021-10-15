@@ -52,20 +52,21 @@ export const doList = async (req, res) => {
         .map(({ schedule, ...rest }) => ({ isOpen: new SimpleOpeningHours(schedule).isOpenOn(req.timestamp), ...rest }))
         .reduce(
             (shops, { isOpen, id, branchId, latitude, longitude, shopName, branchName, productId, productName }) => {
-                const shop = shops[id] || { id: id.toString(), name: shopName, branches: {}, products: [] };
+                const shop = shops[id] || { id: id.toString(), name: shopName, branches: {}, products: {} };
                 shop.branches = {
                     ...shop.branches,
                     [branchId]: { id: branchId.toString(), name: branchName, isOpen, latitude, longitude },
                 };
-                shop.products = [...shop.products, { id: productId.toString(), name: productName }];
+                shop.products = { ...shop.products, [productId]: { id: productId.toString(), name: productName } };
                 return { ...shops, [id]: shop };
             },
             {},
         );
 
-    const shops = Object.values(transformed).map(({ branches, ...shop }) => ({
+    const shops = Object.values(transformed).map(({ branches, products, ...shop }) => ({
         ...shop,
         branches: Object.values(branches),
+        products: Object.values(products),
     }));
 
     res.json({ data: { shops } });

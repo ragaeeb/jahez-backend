@@ -17,6 +17,7 @@
         "name": "Burger King",
         "branches": [
             { "name": "Bank St.", "latitude": 45.3505, "longitude": -75.792 },
+            { "name": "Bank St. Plaza", "latitude": 45.3507, "longitude": -75.791 },
             { "name": "Heron Rd.", "latitude": 44.3504, "longitude": -74.791 }
         ],
         "categories": ["Fast Food"],

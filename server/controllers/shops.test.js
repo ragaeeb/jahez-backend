@@ -268,5 +268,117 @@ describe('shops', () => {
                 },
             });
         });
+
+        it('should show different shops and products', async () => {
+            const latitude = 45.5;
+            const longitude = -75.5;
+            req.userLocation = new GeoPosition(latitude, longitude);
+            req.timestamp = new Date(2020, 6, 6, 16, 17, 0); // monday july 6, 2020, 4:17pm
+
+            const resultSet = [
+                {
+                    id: 1,
+                    branchId: 1,
+                    branchName: 'Branch1',
+                    latitude,
+                    longitude,
+                    productId: 1,
+                    productName: 'Big Mac',
+                    schedule: 'Mo 06:00-16:30',
+                    shopName: 'Shop1',
+                },
+                {
+                    id: 1,
+                    branchId: 1,
+                    branchName: 'Branch1',
+                    latitude,
+                    longitude,
+                    productId: 2,
+                    productName: 'McChicken',
+                    schedule: 'Mo 06:00-16:30',
+                    shopName: 'Shop1',
+                },
+                {
+                    id: 1,
+                    branchId: 2,
+                    branchName: 'Branch2',
+                    latitude,
+                    longitude,
+                    productId: 1,
+                    productName: 'Big Mac',
+                    schedule: 'Mo 06:00-16:30',
+                    shopName: 'Shop1',
+                },
+                {
+                    id: 1,
+                    branchId: 2,
+                    branchName: 'Branch2',
+                    latitude,
+                    longitude,
+                    productId: 2,
+                    productName: 'McChicken',
+                    schedule: 'Mo 06:00-16:30',
+                    shopName: 'Shop1',
+                },
+                {
+                    id: 2,
+                    branchId: 3,
+                    branchName: 'Branch3',
+                    latitude,
+                    longitude,
+                    productId: 3,
+                    productName: 'Crispy Chicken',
+                    schedule: 'Mo 06:00-16:30',
+                    shopName: 'Shop2',
+                },
+                {
+                    id: 3,
+                    branchId: 4,
+                    branchName: 'Branch4',
+                    latitude,
+                    longitude,
+                    productId: 4,
+                    productName: 'Frosty',
+                    schedule: 'Mo 06:00-16:30',
+                    shopName: 'Shop3',
+                },
+            ];
+
+            mockDB(resultSet);
+
+            await doList(req, res, next);
+
+            expect(res.json).toHaveBeenCalledTimes(1);
+            expect(res.json).toHaveBeenCalledWith({
+                data: {
+                    shops: [
+                        {
+                            id: '1',
+                            branches: [
+                                { id: '1', name: 'Branch1', isOpen: true, latitude, longitude },
+                                { id: '2', name: 'Branch2', isOpen: true, latitude, longitude },
+                            ],
+                            name: 'Shop1',
+                            products: [
+                                { id: '1', name: 'Big Mac' },
+                                { id: '2', name: 'McChicken' },
+                            ],
+                        },
+                        {
+                            id: '2',
+                            branches: [{ id: '3', name: 'Branch3', isOpen: true, latitude, longitude }],
+                            name: 'Shop2',
+                            products: [{ id: '3', name: 'Crispy Chicken' }],
+                        },
+                        {
+                            id: '3',
+                            branches: [{ id: '4', name: 'Branch4', isOpen: true, latitude, longitude }],
+                            name: 'Shop3',
+                            products: [{ id: '4', name: 'Frosty' }],
+                        },
+                    ],
+                },
+            });
+        });
     });
 });

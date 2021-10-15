@@ -9,6 +9,7 @@ const init = async () => {
     const { DB_PATH, AUDIT_DB_PATH } = process.env;
 
     fs.unlinkSync(DB_PATH);
+    fs.unlinkSync(AUDIT_DB_PATH);
     const client = await Database.open(DB_PATH);
 
     await Promise.all(
@@ -34,7 +35,7 @@ const init = async () => {
             ].map((s) => client.prepare(s)),
         );
 
-    const result = await client.transaction(async (db) => {
+    await client.transaction(async () => {
         const shops = JSON.parse(fs.readFileSync('data/shops.json'));
         const inserts = [];
         const categoryToId = {};
